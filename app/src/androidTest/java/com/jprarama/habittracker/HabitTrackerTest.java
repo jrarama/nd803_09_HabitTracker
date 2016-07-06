@@ -115,6 +115,10 @@ public class HabitTrackerTest extends ApplicationTestCase<Application> {
         public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             onUpgrade(db, oldVersion, newVersion);
         }
+
+        public void deleteDatabase(Context context) {
+            context.deleteDatabase(DATABASE_NAME);
+        }
     }
 
     private void insertDummyValues(SQLiteDatabase db) {
@@ -151,6 +155,14 @@ public class HabitTrackerTest extends ApplicationTestCase<Application> {
         HabitTable.update(db, 2, 25);
         HabitTable.update(db, 3, 105);
 
+        queryCursor(db);
+
+        Log.d(TAG, "Deleting database");
+        db.close();
+        helper.deleteDatabase(getContext());
+
+        Log.d(TAG, "Recreate db and query");
+        db = helper.getWritableDatabase();
         queryCursor(db);
     }
 
